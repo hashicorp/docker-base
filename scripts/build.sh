@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-set -x
 
 DNSMASQ_TAG=v2.75
 DUMB_INIT_TAG=v1.0.0
