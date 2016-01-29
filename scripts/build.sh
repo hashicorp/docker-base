@@ -39,6 +39,7 @@ cp pkg/build/dumb-init/dumb-init pkg/rootfs/bin
 # Build gosu.
 git clone https://github.com/tianon/gosu.git pkg/build/gosu
 pushd pkg/build/gosu
+git checkout -q "tags/$GOSU_TAG"
 ./build.sh
 popd
 cp pkg/build/gosu/gosu-amd64 pkg/rootfs/bin/gosu
