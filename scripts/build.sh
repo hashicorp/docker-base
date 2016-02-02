@@ -40,7 +40,8 @@ cp pkg/build/dumb-init/dumb-init pkg/rootfs/bin
 git clone https://github.com/tianon/gosu.git pkg/build/gosu
 pushd pkg/build/gosu
 git checkout -q "tags/$GOSU_TAG"
-./build.sh
+docker build --pull -t gosu .
+docker run --rm gosu bash -c 'cd /go/bin && tar -c gosu*' | tar -xv
 popd
 cp pkg/build/gosu/gosu-amd64 pkg/rootfs/bin/gosu
 
