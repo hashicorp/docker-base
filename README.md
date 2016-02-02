@@ -15,4 +15,4 @@ Finally, we have builder (`builder-*`) images that are hermetic build environmen
 
 ## Building the Images
 
-There's a top-level `Makefile` that does all the building. If you are developing locally and don't have the HahsiCorp signing key, you can run `NOSIGN=1 make` to avoid the signing step.
+There's a top-level `Makefile` that does all the building. If you are developing locally and don't have the HashiCorp signing key, you can run `NOSIGN=1 make` to avoid the signing step.
