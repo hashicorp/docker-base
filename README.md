@@ -12,3 +12,7 @@ We also build and sign some custom binaries, but they aren't included in the bas
 There are app-specific (`app-base-*`) images that pull in what they need from above. This isn't too much stuff, so we might want to get rid of that layer and just pull those into the base, but it would be weird to ship dnsmasq with Vault, for example, so this lets us be selective for each product.
 
 Finally, we have builder (`builder-*`) images that are hermetic build environments for the binaries. These aren't intended for any other use other than as transitory containers for building, which are then thrown away.
+
+## Building the Images
+
+There's a top-level `Makefile` that does all the building. If you are developing locally and don't have the HahsiCorp signing key, you can run `NOSIGN=1 make` to avoid the signing step.
