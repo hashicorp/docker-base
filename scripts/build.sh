@@ -56,7 +56,7 @@ fi
 popd
 
 # Build an image, injecting the rootfs content we built above into the
-# Docker context so it can bee pulled into the image (the various images
+# Docker context so it can be pulled into the image (the various images
 # still get to decide what they include).
 build_image()
 {
