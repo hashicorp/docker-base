@@ -50,7 +50,7 @@ cp pkg/build/gosu/gosu-amd64 pkg/rootfs/bin/gosu
 pushd pkg/rootfs/bin
 find . -type f -exec sh -c 'shasum -a256 $(basename $1) >$1.SHA256SUM' -- {} \;
 if [ -z $NOSIGN ]; then
-    gpg --default-key 348FFC4C --detach-sig *.SHA256SUM
+    find . -name \*.SHA256SUM -exec gpg --default-key 348FFC4C --detach-sig {} \;
 fi
 popd
 
