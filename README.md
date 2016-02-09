@@ -14,3 +14,5 @@ Containers may tailor what they include depending on what they need.
 Docker is required for building since compiling steps happen in containers.
 
 `./build.sh <version>`
+
+You can upload this release using `hc-releases -upload pkg/dist/`

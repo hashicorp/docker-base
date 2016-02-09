@@ -44,16 +44,6 @@ docker run --rm gosu bash -c 'cd /go/bin && tar -c gosu*' | tar -xv
 popd
 cp pkg/build/gosu/gosu-amd64 pkg/rootfs/bin/gosu
 
-# SHA and optionally sign the rootfs contents that we provided. We
-# sign each binary piece-wise since images might not contain all of
-# them, so they can easily be verified separately.
-pushd pkg/rootfs/bin
-find . -type f -exec sh -c 'shasum -a256 $(basename $1) >$1.SHA256SUM' -- {} \;
-if [ -z $NOSIGN ]; then
-    find . -name \*.SHA256SUM -exec gpg --default-key 348FFC4C --detach-sig {} \;
-fi
-popd
-
 # Prep the release.
 pushd pkg/rootfs
 zip -r ../dist/docker-base_${VERSION}_linux_amd64.zip *
