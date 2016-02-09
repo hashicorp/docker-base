@@ -13,7 +13,4 @@ Containers may tailor what they include depending on what they need.
 
 Docker is required for building since compiling steps happen in containers.
 
-`./build.sh`
-
-This will build the rootfs, sign the binaries, compress everything, and then
-release it using the hc-releases tool.
+`./build.sh <version>`

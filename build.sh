@@ -4,10 +4,24 @@ set -e
 DUMB_INIT_TAG=v1.0.0
 GOSU_TAG=1.7
 
+# Get the version from the command line.
+VERSION=$1
+if [ -z $VERSION ]; then
+    echo "Please specify a version."
+    exit 1
+fi
+
 # Clear out the working folder and make the initial structure.
 rm -rf pkg
+mkdir -p pkg/dist
 mkdir -p pkg/build
 mkdir -p pkg/rootfs/bin
+
+# Generate the tag.
+if [ -z $NOTAG ]; then
+  git commit --allow-empty -a --gpg-sign=348FFC4C -m "Release v$VERSION"
+  git tag -a -m "Version $VERSION" -s -u 348FFC4C "v${VERSION}" master
+fi
 
 # Create the Debian build box. We don't use this to package anything
 # directly, but it's used as a scratch build environment.
@@ -37,5 +51,16 @@ pushd pkg/rootfs/bin
 find . -type f -exec sh -c 'shasum -a256 $(basename $1) >$1.SHA256SUM' -- {} \;
 if [ -z $NOSIGN ]; then
     gpg --default-key 348FFC4C --detach-sig *.SHA256SUM
+fi
+popd
+
+# Prep the release.
+pushd pkg/rootfs
+zip -r ../dist/docker-base_${VERSION}_linux_amd64.zip *
+popd
+pushd pkg/dist
+shasum -a256 * > ./docker-base_${VERSION}_SHA256SUMS
+if [ -z $NOSIGN ]; then
+  gpg --default-key 348FFC4C --detach-sig ./docker-base_${VERSION}_SHA256SUMS
 fi
 popd
