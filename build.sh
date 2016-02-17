@@ -32,9 +32,8 @@ fi
 docker build -t hashicorp/builder-debian images/builder-debian
 
 # Build dumb-init.
-git clone https://github.com/Yelp/dumb-init.git pkg/build/dumb-init
+git clone -b "$DUMB_INIT_TAG" https://github.com/Yelp/dumb-init.git pkg/build/dumb-init
 pushd pkg/build/dumb-init
-git checkout -q "tags/$DUMB_INIT_TAG"
 if $(git show-ref --verify refs/tags/${DUMB_INIT_TAG} | grep --quiet "$DUMB_INIT_HASH") ; then
     echo "Verified dumb-init git repository state"
 else
@@ -46,9 +45,8 @@ popd
 cp pkg/build/dumb-init/dumb-init pkg/rootfs/bin
 
 # Build gosu.
-git clone https://github.com/tianon/gosu.git pkg/build/gosu
+git clone -b "$GOSU_TAG" https://github.com/tianon/gosu.git pkg/build/gosu
 pushd pkg/build/gosu
-git checkout -q "tags/$GOSU_TAG"
 if $(git show-ref --verify refs/tags/${GOSU_TAG} | grep --quiet "$GOSU_HASH") ; then
     echo "Verified gosu git repository state"
 else
