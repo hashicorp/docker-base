@@ -1,8 +1,12 @@
 #!/bin/bash
 set -e
 
+# Note the hashes here are the git SHAs that correspond to the given tags. This
+# lets us make sure the tags don't change on us.
 DUMB_INIT_TAG=v1.0.0
+DUMB_INIT_HASH=a9eadb580c0d234fc4090c1bf3f19f8d87bff76b
 GOSU_TAG=1.7
+GOSU_HASH=6908f86c7e0bf676b27b9237c41ca40719d4b9cb
 
 # Get the version from the command line.
 VERSION=$1
@@ -31,6 +35,12 @@ docker build -t hashicorp/builder-debian images/builder-debian
 git clone https://github.com/Yelp/dumb-init.git pkg/build/dumb-init
 pushd pkg/build/dumb-init
 git checkout -q "tags/$DUMB_INIT_TAG"
+if $(git show-ref --verify refs/tags/${DUMB_INIT_TAG} | grep --quiet "$DUMB_INIT_HASH") ; then
+    echo "Verified dumb-init git repository state"
+else
+    echo "Could not verify dumb-init git repository state"
+    exit 1
+fi
 docker run --rm -v "$(pwd):/build" -w /build hashicorp/builder-debian make
 popd
 cp pkg/build/dumb-init/dumb-init pkg/rootfs/bin
@@ -39,7 +49,13 @@ cp pkg/build/dumb-init/dumb-init pkg/rootfs/bin
 git clone https://github.com/tianon/gosu.git pkg/build/gosu
 pushd pkg/build/gosu
 git checkout -q "tags/$GOSU_TAG"
-docker build --pull -t gosu .
+if $(git show-ref --verify refs/tags/${GOSU_TAG} | grep --quiet "$GOSU_HASH") ; then
+    echo "Verified gosu git repository state"
+else
+    echo "Could not verify gosu git repository state"
+    exit 1
+fi
+docker build --no-cache --pull -t gosu .
 docker run --rm gosu bash -c 'cd /go/bin && tar -c gosu*' | tar -xv
 popd
 cp pkg/build/gosu/gosu-amd64 pkg/rootfs/bin/gosu
